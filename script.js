@@ -5,6 +5,7 @@ const nav = document.querySelector("[data-nav]");
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const portrait = document.querySelector("[data-portrait]");
 const year = document.querySelector("[data-year]");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let savedTheme = null;
 try {
@@ -67,23 +68,45 @@ window.addEventListener(
   { passive: true }
 );
 
-if ("IntersectionObserver" in window) {
+if ("IntersectionObserver" in window && !prefersReducedMotion) {
   root.classList.add("motion-ready");
   const revealObserver = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        const delay = entry.target.dataset.delay || 0;
-        entry.target.style.setProperty("--delay", `${delay}ms`);
         entry.target.classList.add("visible");
         observer.unobserve(entry.target);
       });
     },
-    { threshold: 0.12 }
+    { threshold: 0, rootMargin: "0px 0px -12% 0px" }
   );
 
-  document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+  document
+    .querySelectorAll("main > .section > .container")
+    .forEach((container) => revealObserver.observe(container));
 }
+
+function revealContainerFor(element) {
+  if (!(element instanceof Element)) return;
+  const container =
+    element.closest("main > .section > .container") ||
+    element.closest("main > .section")?.querySelector(":scope > .container");
+  container?.classList.add("visible");
+}
+
+document.addEventListener("focusin", (event) => revealContainerFor(event.target));
+
+function revealCurrentHash() {
+  if (!window.location.hash) return;
+  try {
+    revealContainerFor(document.getElementById(decodeURIComponent(window.location.hash.slice(1))));
+  } catch {
+    // Ignore malformed URL fragments; normal page navigation remains available.
+  }
+}
+
+revealCurrentHash();
+window.addEventListener("hashchange", revealCurrentHash);
 
 const navLinks = [...document.querySelectorAll(".site-nav a")];
 const sections = navLinks

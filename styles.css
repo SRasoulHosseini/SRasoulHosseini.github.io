@@ -108,7 +108,7 @@ h3 {
 
 .section {
   position: relative;
-  padding: clamp(84px, 10vw, 140px) 0;
+  padding: clamp(72px, 7vw, 104px) 0;
 }
 
 .section-tint {
@@ -964,16 +964,34 @@ h3 {
   transform: none;
 }
 
-.motion-ready .reveal {
+.motion-ready main > .section > .container {
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 520ms ease, transform 520ms ease;
-  transition-delay: var(--delay, 0ms);
+  transform: translateY(24px);
+  transition: opacity 680ms ease, transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.motion-ready .reveal.visible {
+.motion-ready main > .section > .container.visible {
   opacity: 1;
   transform: none;
+}
+
+@media (min-width: 981px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  main > .section {
+    display: grid;
+    min-height: calc(100svh - var(--header-height));
+    align-items: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+
+  main > .hero {
+    min-height: 100svh;
+    align-items: start;
+  }
 }
 
 @media (max-width: 980px) {
@@ -1195,6 +1213,7 @@ h3 {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+    scroll-snap-type: none;
   }
 
   *,
@@ -1206,8 +1225,10 @@ h3 {
     animation-iteration-count: 1 !important;
   }
 
-  .reveal {
+  .reveal,
+  .motion-ready main > .section > .container {
     opacity: 1;
     transform: none;
+    transition: none;
   }
 }
