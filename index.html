@@ -104,8 +104,50 @@
 
     <main id="main" tabindex="-1">
       <section class="hero section" id="top" aria-labelledby="hero-title">
-        <div class="orb orb-one" aria-hidden="true"></div>
-        <div class="orb orb-two" aria-hidden="true"></div>
+        <div class="research-field" aria-hidden="true">
+          <svg viewBox="0 0 1440 880" preserveAspectRatio="xMaxYMid slice" focusable="false">
+            <defs>
+              <linearGradient id="hero-research-gradient" x1="470" y1="0" x2="1385" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0" style="stop-color: var(--violet)" />
+                <stop offset="1" style="stop-color: var(--cyan)" />
+              </linearGradient>
+            </defs>
+
+            <g class="rf-streams">
+              <path class="rf-track" d="M470 270 C760 270 820 390 1035 425" />
+              <path class="rf-track" d="M470 430 C760 430 830 430 1035 430" />
+              <path class="rf-track" d="M470 590 C760 590 820 470 1035 435" />
+              <path class="rf-flow rf-flow-a" d="M470 270 C760 270 820 390 1035 425" />
+              <path class="rf-flow rf-flow-b" d="M470 430 C760 430 830 430 1035 430" />
+              <path class="rf-flow rf-flow-c" d="M470 590 C760 590 820 470 1035 435" />
+            </g>
+
+            <g class="rf-modalities">
+              <g class="rf-glyph" transform="translate(690 248)">
+                <rect width="46" height="38" rx="8" />
+                <circle cx="33" cy="11" r="4" />
+                <path d="M8 30l10-10 7 7 6-5 8 8" />
+              </g>
+              <g class="rf-glyph" transform="translate(735 410)">
+                <rect width="50" height="40" rx="8" />
+                <path d="M10 12h30M10 20h24M10 28h28" />
+              </g>
+              <g class="rf-glyph" transform="translate(690 570)">
+                <rect width="50" height="40" rx="8" />
+                <path d="M8 21h7l4-10 7 19 6-15 5 6h6" />
+              </g>
+            </g>
+
+            <circle class="rf-core" cx="1035" cy="430" r="10" />
+            <g class="rf-memory" transform="translate(1150 430)">
+              <circle class="rf-ring rf-ring-outer" r="235" />
+              <circle class="rf-ring rf-ring-inner" r="172" />
+              <circle class="rf-memory-node node-one" cx="-196" cy="-74" r="7" />
+              <circle class="rf-memory-node node-two" cx="-152" cy="128" r="5" />
+              <circle class="rf-memory-node node-three" cx="116" cy="-126" r="6" />
+            </g>
+          </svg>
+        </div>
         <div class="container hero-grid">
           <div class="hero-copy reveal">
             <p class="eyebrow"><span></span> Machine learning researcher</p>
