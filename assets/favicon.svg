@@ -1,10 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SRH">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6d28d9"/>
-      <stop offset="1" stop-color="#087e8b"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="18" fill="url(#g)"/>
-  <text x="32" y="39" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="700">SRH</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Rasoul Hosseini">
+  <rect width="64" height="64" rx="12" fill="#f7f7f2"/>
+  <path d="M10 47C10 19 24 12 32 32S54 44 54 18" fill="none" stroke="#6940b9" stroke-width="3"/>
+  <path d="M10 32C20 32 23 10 33 14S39 54 54 47" fill="none" stroke="#16746f" stroke-width="2.5"/>
+  <g fill="#f7f7f2" stroke="#6940b9" stroke-width="2"><circle cx="10" cy="47" r="4"/><circle cx="54" cy="18" r="4"/></g>
 </svg>
