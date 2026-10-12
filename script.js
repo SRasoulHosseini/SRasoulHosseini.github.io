@@ -9,9 +9,11 @@
 
   function applyTheme(theme) {
     root.dataset.theme = theme;
-    themeButton?.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    const action = theme === 'dark' ? 'Switch to day mode' : 'Switch to night mode';
+    themeButton?.setAttribute('aria-label', action);
+    themeButton?.setAttribute('title', action);
     const label = document.querySelector('[data-theme-label]');
-    if (label) label.textContent = theme === 'dark' ? 'Night' : 'Paper';
+    if (label) label.textContent = theme === 'dark' ? 'Night' : 'Day';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#191b22' : '#f7f7f2');
   }
 
@@ -177,9 +179,9 @@
     const oldGroup = document.getElementById('past-points');
     const newGroup = document.getElementById('new-points');
     const timeInput = document.getElementById('learning-time');
-    const memoryInput = document.getElementById('memory-toggle');
+    const preservationInput = document.getElementById('knowledge-toggle');
     const playButton = document.querySelector('[data-play]');
-    if (!study || !oldGroup || !newGroup || !timeInput || !memoryInput || !playButton) return;
+    if (!study || !oldGroup || !newGroup || !timeInput || !preservationInput || !playButton) return;
 
     let seed = 73019;
     function random() {
@@ -205,7 +207,7 @@
     const newer = makeCloud(newGroup, 38);
     const oldRegion = study.querySelector('.past-region');
     const newRegion = study.querySelector('.new-region');
-    const oldTrace = study.querySelector('.memory-trace');
+    const oldTrace = study.querySelector('.knowledge-trace');
     const status = study.querySelector('.study-status');
     const playLabel = study.querySelector('[data-play-label]');
     const playSymbol = study.querySelector('.play-symbol');
@@ -217,21 +219,20 @@
     let lastPaint = 0;
 
     function updatePlayButton() {
-      const word = running ? 'Pause' : time >= 1 ? 'Replay' : 'Play';
+      const word = running ? 'Pause' : time >= 1 ? 'Restart' : 'Play';
       playLabel.textContent = word;
       playSymbol.textContent = running ? 'Ⅱ' : time >= 1 ? '↻' : '▷';
       playButton.setAttribute('aria-label', `${word} learning illustration`);
     }
 
     function updateCaption() {
-      status.textContent = memoryInput.checked
-        ? 'New experience. Earlier knowledge, retained.'
-        : 'Without replay, earlier knowledge can fade.';
+      status.textContent = preservationInput.checked
+        ? 'Learn something new. Keep what matters.'
+        : 'Earlier knowledge can fade as new information arrives.';
     }
 
     function draw() {
-      const memory = memoryInput.checked;
-      const drift = memory ? 0 : time;
+      const drift = preservationInput.checked ? 0 : time;
       const phase = time * Math.PI * 2;
       older.forEach(point => {
         const x = 155 + point.x * (65 + drift * 17) + point.y * 14 + drift * 24;
@@ -293,8 +294,8 @@
       updatePlayButton();
     });
     timeInput.addEventListener('pointerdown', pause);
-    memoryInput.addEventListener('change', () => { draw(); updateCaption(); });
-    memoryInput.setAttribute('aria-describedby', 'study-description');
+    preservationInput.addEventListener('change', () => { draw(); updateCaption(); });
+    preservationInput.setAttribute('aria-describedby', 'study-description');
     document.addEventListener('visibilitychange', () => { lastTick = 0; schedule(); });
     reducedMotion.addEventListener?.('change', event => { if (event.matches) pause(); });
 

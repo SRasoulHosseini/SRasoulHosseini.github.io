@@ -28,10 +28,10 @@ function boot({reduced=false, observer=false, compact=false, observerFails=false
   const root=new Element(); root.scrollHeight=5000;
   const document=new Element(), window=new Element(), media=new Element(), compactMedia=new Element(); media.matches=reduced; compactMedia.matches=compact;
   const selectors={}; const get=s=>selectors[s]??=new Element();
-  const ids={}; for(const id of ['past-points','new-points','learning-time','memory-toggle']) ids[id]=new Element(id);
+  const ids={}; for(const id of ['past-points','new-points','learning-time','knowledge-toggle']) ids[id]=new Element(id);
   const study=get('.learning-study');
   get('.masthead').rect.height=88;get('.margin-column').rect.height=56;
-  study.selectors={}; for(const s of ['.past-region','.new-region','.memory-trace','.study-status','[data-play-label]','.play-symbol','.study-controls']) study.selectors[s]=get(s);
+  study.selectors={}; for(const s of ['.past-region','.new-region','.knowledge-trace','.study-status','[data-play-label]','.play-symbol','.study-controls']) study.selectors[s]=get(s);
   const chapters=['top','about','publications','work','certificates','service','contact'].map((id,i)=>{const e=new Element(id);e.rect={top:i*700,bottom:i*700+650,left:0};return e;});
   const links=chapters.map(c=>{const e=new Element();e.hash='#'+c.id;return e;});
   const reveal=new Element();reveal.rect.top=1200;
@@ -52,18 +52,21 @@ function boot({reduced=false, observer=false, compact=false, observerFails=false
 }
 
 const a=boot();a.step();
+assert.equal(a.selectors['[data-theme-label]'].textContent,'Day');
+assert.equal(a.selectors['[data-theme-toggle]'].attrs['aria-label'],'Switch to night mode');
 assert.equal(a.links[0].attrs['aria-current'],'location');
 assert.equal(a.ids['past-points'].children.length,46);assert.equal(a.ids['new-points'].children.length,38);
 assert.equal(a.selectors['.study-controls'].hidden,false);
 assert(a.reveal.classList.contains('visible'));
 a.selectors['[data-theme-toggle]'].fire('click');assert.equal(a.root.dataset.theme,'dark');
 assert.equal(a.selectors['[data-theme-label]'].textContent,'Night');
+assert.equal(a.selectors['[data-theme-toggle]'].attrs['aria-label'],'Switch to day mode');
 a.selectors['[data-play]'].fire('click');const paused=a.ids['learning-time'].value;a.step(10);assert.equal(a.ids['learning-time'].value,paused);
-a.ids['learning-time'].value='100';a.ids['learning-time'].fire('input');assert.equal(a.selectors['[data-play-label]'].textContent,'Replay');
-a.ids['memory-toggle'].checked=false;a.ids['memory-toggle'].fire('change');
+a.ids['learning-time'].value='100';a.ids['learning-time'].fire('input');assert.equal(a.selectors['[data-play-label]'].textContent,'Restart');
+a.ids['knowledge-toggle'].checked=false;a.ids['knowledge-toggle'].fire('change');
 assert.equal(a.selectors['.past-region'].style.opacity,'0.180');assert(a.selectors['.study-status'].textContent.includes('can fade'));
-a.ids['memory-toggle'].checked=true;a.ids['memory-toggle'].fire('change');assert.equal(a.selectors['.past-region'].style.opacity,'0.580');
-a.selectors['[data-play]'].fire('click');a.step(240);assert.equal(a.ids['learning-time'].value,'100');assert.equal(a.selectors['[data-play-label]'].textContent,'Replay');
+a.ids['knowledge-toggle'].checked=true;a.ids['knowledge-toggle'].fire('change');assert.equal(a.selectors['.past-region'].style.opacity,'0.580');
+a.selectors['[data-play]'].fire('click');a.step(240);assert.equal(a.ids['learning-time'].value,'100');assert.equal(a.selectors['[data-play-label]'].textContent,'Restart');
 assert.equal(a.frames.size,0,'Animation stops at the end');
 a.chapters.forEach((c,i)=>c.rect.top=(i-4)*700);a.window.fire('scroll');a.step();assert.equal(a.links[4].attrs['aria-current'],'location');
 assert.equal(a.links[0].attrs['aria-current'],undefined);
@@ -80,7 +83,7 @@ c.document.hidden=false;c.document.fire('visibilitychange');c.step(4);assert(Num
 const studyObserver=c.observers.find(o=>o.targets.includes(c.selectors['.learning-study']));
 studyObserver.fn([{isIntersecting:false}]);c.step(3);const offscreen=c.ids['learning-time'].value;c.step(5);assert.equal(c.ids['learning-time'].value,offscreen);
 studyObserver.fn([{isIntersecting:true}]);c.step(4);assert(Number(c.ids['learning-time'].value)>Number(offscreen));
-console.log('PASS: theme with blocked storage, navigation including certificates, play/pause/replay, slider, memory switch, reduced motion, hidden-tab and offscreen suspension. DOM logic only; no rendering assertions.');
+console.log('PASS: theme with blocked storage, navigation including certificates, play/pause/restart, slider, knowledge preservation, reduced motion, hidden-tab and offscreen suspension. DOM logic only; no rendering assertions.');
 
 // Regressions in navigation geometry, bottom-of-page selection, and enhancement failures.
 a.window.scrollY=4100;a.window.fire('scroll');a.step();assert.equal(a.links[6].attrs['aria-current'],'location');

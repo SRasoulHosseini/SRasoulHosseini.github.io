@@ -38,7 +38,7 @@ The repository name, URL, and existing Pages settings can stay the same.
   The embedded style/script blocks are generated from the following two files.
 - `styles.css`: color variables at the top, typography, responsive layouts,
   reduced-motion behavior, and print styles.
-- `script.js`: Paper/Night theme, active contents link, reading progress, reveal
+- `script.js`: Day/Night theme, active contents link, reading progress, reveal
   transitions, and the continual-learning illustration.
 - `assets/portrait.jpg`: original portrait.
 - `assets/Seyed_Rasoul_Hosseini_CV.pdf`: existing downloadable CV, unchanged.
@@ -79,9 +79,11 @@ screens. Links, content, CV, and certificates work without JavaScript. Theme and
 illustration controls appear only after initialization.
 
 The opening illustration is a **conceptual visual metaphor**, not an experiment
-or trained model. It shows earlier and incoming experience. Use the slider,
-pause/replay button, and Memory replay switch to explore it. It plays once,
-pauses work while out of view, and does not autoplay when reduced motion is set.
+or trained model. It shows existing and incoming knowledge. Use the learning
+progress slider, play/pause/restart button, and Preserve knowledge switch to
+explore retention. It illustrates a general goal, without attributing it to a
+specific learning method. It plays once, pauses work while out of view, and
+does not autoplay when reduced motion is set.
 
 The page includes a skip link, keyboard focus indicators, reduced-motion and
 forced-color support, and print styles. The illustration uses SVG rather than
@@ -92,7 +94,7 @@ video, WebGL, or a third-party animation library.
 Local file links, retained content and certificate bytes, JavaScript syntax,
 HTTP asset delivery, and focused interaction logic were checked. Regression
 checks cover resized headers, the mobile offset, bottom-of-page navigation,
-observer failure, theme changes, memory replay, pause/resume, and reduced motion.
+observer failure, theme changes, knowledge preservation, pause/resume, and reduced motion.
 
 The build environment blocks the live site and has no browser available.
 Browser rendering and the cause of the reported live failure remain unverified.

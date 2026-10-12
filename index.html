@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Seyed Rasoul Hosseini — PhD student at West Virginia University and visiting student at the University of Utah SCI Institute. Research in continual learning, self-supervised learning, and computer vision.">
   <meta name="theme-color" content="#f7f7f2">
-  <meta name="site-version" content="2026-10-12.2">
+  <meta name="site-version" content="2026-10-12.3">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Seyed Rasoul Hosseini — Research Notebook">
   <meta property="og:description" content="Learning from a world that does not stand still. Research in continual learning, self-supervised learning, and computer vision.">
@@ -103,7 +103,8 @@ main { min-width: 0; }
 .wordmark-sub { display: block; margin-top: 5px; font: .59rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--secondary); }
 .masthead-note { margin-left: auto; margin-right: clamp(20px, 5vw, 90px); font: italic 1.02rem/1.3 var(--serif); color: var(--secondary); }
 .masthead-actions { display: flex; align-items: center; gap: 24px; }
-.theme-control { display: flex; min-height: 44px; gap: 8px; align-items: center; padding: 0; border: 0; background: none; color: var(--secondary); font: .69rem var(--mono); }
+.theme-control { display: flex; min-height: 44px; gap: 8px; align-items: center; padding: 0; border: 0; background: none; color: var(--secondary); font: .75rem var(--mono); white-space: nowrap; }
+.theme-control [data-theme-label] { display: inline-block; min-width: 5ch; text-align: left; }
 .theme-control svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.2; }
 .theme-control svg path { fill: currentColor; stroke: none; }
 .theme-control:hover { color: var(--violet); }
@@ -171,7 +172,7 @@ main { min-width: 0; }
 .plot-axis-label { fill: var(--secondary); font: 9px var(--mono); letter-spacing: 1px; }
 .experience-region { fill: rgba(var(--violet-rgb), .035); stroke: var(--violet); stroke-width: .9; stroke-dasharray: 3 5; opacity: .58; }
 .new-region { fill: rgba(var(--teal-rgb), .04); stroke: var(--teal); }
-.memory-trace { fill: none; stroke: var(--violet); stroke-width: 1.3; opacity: .27; }
+.knowledge-trace { fill: none; stroke: var(--violet); stroke-width: 1.3; opacity: .27; }
 .experience-trace { fill: none; stroke: var(--teal); stroke-width: 1.2; opacity: .35; }
 .exchange-path { fill: none; stroke: var(--secondary); color: var(--secondary); stroke-width: 1; stroke-dasharray: 3 4; opacity: .5; }
 .past-points { fill: var(--violet); }
@@ -185,14 +186,15 @@ main { min-width: 0; }
 .study-toolbar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--rule); }
 .play-control { display: inline-flex; align-items: center; gap: 9px; min-height: 38px; padding: 0 8px 0 0; border: none; background: none; font: .64rem var(--mono); }
 .play-symbol { display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid var(--rule); border-radius: 50%; font: .72rem var(--sans); color: var(--violet); }
-.memory-control { position: relative; display: inline-flex; gap: 8px; align-items: center; min-height: 38px; cursor: pointer; font: .61rem var(--mono); color: var(--secondary); }
-.memory-control input { position: absolute; opacity: 0; width: 30px; height: 25px; left: 0; margin: 0; }
+.knowledge-control { position: relative; display: inline-flex; gap: 8px; align-items: center; min-height: 44px; cursor: pointer; font: .7rem var(--mono); color: var(--secondary); }
+.knowledge-control input { position: absolute; opacity: 0; width: 30px; height: 25px; left: 0; margin: 0; }
 .switch { position: relative; width: 27px; height: 15px; border: 1px solid var(--secondary); border-radius: 20px; transition: background 160ms; }
 .switch::after { content: ""; position: absolute; width: 9px; height: 9px; border-radius: 50%; top: 2px; left: 2px; background: var(--secondary); transition: transform 180ms var(--ease); }
-.memory-control input:checked + .switch { background: var(--violet); border-color: var(--violet); }
-.memory-control input:checked + .switch::after { transform: translateX(12px); background: var(--paper); }
-.memory-control input:focus-visible + .switch { outline: 2px solid var(--focus); outline-offset: 4px; }
-.time-control { display: flex; gap: 12px; align-items: center; min-height: 36px; color: var(--secondary); font: .6rem var(--mono); }
+.knowledge-control input:checked + .switch { background: var(--violet); border-color: var(--violet); }
+.knowledge-control input:checked + .switch::after { transform: translateX(12px); background: var(--paper); }
+.knowledge-control input:focus-visible + .switch { outline: 2px solid var(--focus); outline-offset: 4px; }
+.time-control { display: flex; gap: 12px; align-items: center; min-height: 44px; color: var(--secondary); font: .7rem var(--mono); }
+.time-control label { white-space: nowrap; }
 .time-control input { flex: 1; min-width: 0; accent-color: var(--violet); height: 25px; }
 .study-status { display: block; margin-top: 16px; font: italic 1.1rem/1.4 var(--serif); color: var(--ink); }
 .study-disclaimer { display: block; margin-top: 6px; color: var(--secondary); font: .65rem/1.6 var(--mono); }
@@ -224,14 +226,11 @@ main { min-width: 0; }
 .section-heading p { max-width: 58ch; margin-top: 17px; color: var(--secondary); font-size: .85rem; }
 .section-heading > .underlined-link { white-space: nowrap; }
 .publication-list { list-style: none; border-top: 1px solid var(--rule); }
-.publication { position: relative; isolation: isolate; display: grid; grid-template-columns: 100px minmax(0, 1fr) 16px; gap: 24px; padding: 29px 0; border-bottom: 1px solid var(--rule); }
+.publication { position: relative; isolation: isolate; display: grid; grid-template-columns: 64px minmax(0, 1fr) 16px; gap: 24px; padding: 29px 0; border-bottom: 1px solid var(--rule); }
 .publication:last-child { border-bottom: 0; padding-bottom: 0; }
 .publication::before { content: ""; position: absolute; inset: 0 -12px; z-index: -1; background: rgba(var(--violet-rgb), .035); opacity: 0; transition: opacity 200ms ease; }
 .publication:hover::before, .publication:focus-within::before { opacity: 1; }
-.publication-meta { display: flex; flex-direction: column; gap: 6px; padding-top: 3px; font: .65rem/1.5 var(--mono); color: var(--secondary); }
-.publication-meta > span:first-child { color: var(--ink); font-size: .76rem; }
-.accepted { color: var(--teal); }
-.reviewed { color: var(--violet); }
+.publication-meta { padding-top: 3px; font: .76rem/1.5 var(--mono); color: var(--secondary); }
 .publication h3 { margin-bottom: 11px; font-size: 1.05rem; font-weight: 500; letter-spacing: -.015em; line-height: 1.45; text-wrap: pretty; }
 .publication h3 a { text-decoration: none; }
 .publication p { color: var(--secondary); font-size: .88rem; line-height: 1.7; }
@@ -337,12 +336,12 @@ main { min-width: 0; }
   html { scroll-padding-top: calc(var(--sticky-height, 128px) + 16px); }
   .masthead { padding-block: 10px; gap: 10px; }
   .masthead-note { display: none; }
-  .masthead-actions { gap: 16px; }
+  .masthead-actions { gap: 12px; flex-shrink: 0; }
   .wordmark { font-size: .85rem; gap: 9px; }
-  .wordmark-sub { font-size: .59rem; }
+  .wordmark-sub { font-size: .56rem; letter-spacing: .03em; }
   .identity-mark { width: 28px; }
-  .theme-control span { display: none; }
-  .theme-control { width: 30px; justify-content: center; }
+  .theme-control { width: auto; gap: 6px; justify-content: center; font-size: .7rem; }
+  .theme-control svg { width: 16px; }
   .cv-link { gap: 9px; }
   .contents { gap: 24px; }
   .cover { padding-top: 43px; }
@@ -359,7 +358,7 @@ main { min-width: 0; }
   .learning-study { width: min(100%, 500px); margin: 0 auto; }
   .study-heading .micro { font-size: .64rem; }
   .study-canvas { margin-inline: 0; }
-  .play-control, .memory-control, .time-control { font-size: .67rem; }
+  .play-control, .knowledge-control, .time-control { font-size: .7rem; }
   .study-disclaimer { font-size: .65rem; }
   .study-status { font-size: 1.15rem; }
   .cover-footer { min-height: 78px; }
@@ -383,8 +382,8 @@ main { min-width: 0; }
   .thread h3 { font-size: .93rem; }
   .section-heading { display: block; margin-bottom: 26px; }
   .section-heading > .underlined-link { margin-top: 12px; }
-  .publication { grid-template-columns: 82px minmax(0, 1fr) 12px; gap: 17px; padding-block: 24px; }
-  .publication-meta { font-size: .6rem; }
+  .publication { grid-template-columns: 58px minmax(0, 1fr) 12px; gap: 17px; padding-block: 24px; }
+  .publication-meta { font-size: .75rem; }
   .publication h3 { font-size: 1rem; }
   .publication p { font-size: .88rem; }
   .timeline-entry { grid-template-columns: 110px minmax(0, 1fr); gap: 17px; }
@@ -429,7 +428,7 @@ main { min-width: 0; }
   .about-grid { display: flex; flex-direction: column; gap: 27px; }
   .portrait-note { width: 177px; align-self: center; margin-block: 5px 9px; }
   .publication { grid-template-columns: minmax(0, 1fr) 14px; gap: 8px 15px; }
-  .publication-meta { grid-column: 1 / -1; flex-direction: row; align-items: baseline; gap: 15px; font-size: .64rem; }
+  .publication-meta { grid-column: 1 / -1; font-size: .75rem; }
   .publication-content { grid-column: 1; }
   .publication-arrow { grid-row: 2; grid-column: 2; }
   .publication h3 { font-size: 1.02rem; }
@@ -490,9 +489,9 @@ main { min-width: 0; }
     </a>
     <p class="masthead-note">Learning. Adapting. Remembering.</p>
     <div class="masthead-actions">
-      <button class="theme-control" type="button" aria-label="Switch to dark theme" data-theme-toggle hidden>
+      <button class="theme-control" type="button" aria-label="Switch to night mode" data-theme-toggle hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5"/><path d="M12 4.5a7.5 7.5 0 0 1 0 15Z"/></svg>
-        <span data-theme-label>Paper</span>
+        <span data-theme-label>Day</span>
       </button>
       <a class="cv-link" href="assets/Seyed_Rasoul_Hosseini_CV.pdf" download>CV <span aria-hidden="true">↓</span></a>
     </div>
@@ -540,7 +539,7 @@ main { min-width: 0; }
             <div class="study-canvas">
               <svg id="learning-plot" viewBox="0 0 480 335" role="img" aria-labelledby="plot-title plot-desc">
                 <title id="plot-title">A conceptual illustration of continual learning</title>
-                <desc id="plot-desc">Purple points represent earlier experience and teal points represent new experience. Memory replay preserves the earlier group as new experience is incorporated. This is a visual metaphor, not a trained model or measured result.</desc>
+                <desc id="plot-desc">Purple points symbolize existing knowledge and teal points symbolize incoming knowledge. The preservation control compares retaining earlier knowledge with letting it fade as new information arrives. This is a conceptual illustration, not an experiment or a specific learning method.</desc>
                 <defs>
                   <pattern id="plot-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.75" class="grid-dot"/></pattern>
                   <marker id="arrow-tip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="m1 1 7 4-7 4" fill="none" stroke="currentColor" stroke-width="1.4"/></marker>
@@ -548,28 +547,28 @@ main { min-width: 0; }
                 <rect width="480" height="335" fill="url(#plot-grid)"/>
                 <path class="plot-axis" d="M35 35v260h415"/>
                 <path class="plot-guide" d="M55 167h375M240 55v222"/>
-                <text x="39" y="23" class="plot-axis-label">REPRESENTATION SPACE</text>
+                <text x="39" y="23" class="plot-axis-label">KNOWLEDGE SPACE</text>
                 <text x="444" y="313" class="plot-axis-label">z</text>
                 <ellipse class="experience-region past-region" cx="155" cy="178" rx="88" ry="76" transform="rotate(-25 155 178)"/>
                 <ellipse class="experience-region new-region" cx="345" cy="143" rx="83" ry="68" transform="rotate(-25 345 143)"/>
-                <path class="memory-trace" d="M116 225C80 230 64 186 90 142S190 91 213 139 187 228 136 209 87 143 130 126 203 166 176 185"/>
+                <path class="knowledge-trace" d="M116 225C80 230 64 186 90 142S190 91 213 139 187 228 136 209 87 143 130 126 203 166 176 185"/>
                 <path class="experience-trace" d="M433 221C395 213 432 116 380 109S268 120 282 166 365 204 378 150 311 106 305 152"/>
                 <path class="exchange-path" d="M196 205C244 255 285 223 314 198" marker-end="url(#arrow-tip)"/>
                 <g id="past-points" class="past-points"><circle cx="133" cy="151" r="4"/><circle cx="160" cy="179" r="5"/><circle cx="183" cy="158" r="3"/><circle cx="110" cy="192" r="3"/><circle cx="177" cy="210" r="4"/><circle cx="147" cy="215" r="3"/><circle cx="119" cy="173" r="4"/><circle cx="186" cy="184" r="3"/></g>
                 <g id="new-points" class="new-points"><circle cx="323" cy="133" r="4"/><circle cx="353" cy="161" r="5"/><circle cx="377" cy="145" r="3"/><circle cx="340" cy="108" r="3"/><circle cx="305" cy="151" r="4"/><circle cx="358" cy="125" r="3"/><circle cx="330" cy="180" r="3"/></g>
-                <text x="90" y="272" class="plot-label past-label">earlier experience</text>
-                <text x="300" y="75" class="plot-label new-label">new experience</text>
-                <g class="annotation-arrow" aria-hidden="true"><path d="M232 278q-15-12-10-34m-5 6 5-6 4 8"/><text x="237" y="280">carry something forward</text></g>
+                <text x="90" y="272" class="plot-label past-label">existing knowledge</text>
+                <text x="300" y="75" class="plot-label new-label">incoming knowledge</text>
+                <g class="annotation-arrow" aria-hidden="true"><path d="M232 278q-15-12-10-34m-5 6 5-6 4 8"/><text x="237" y="280">keep what we learn</text></g>
               </svg>
             </div>
             <div class="study-controls" hidden>
               <div class="study-toolbar">
                 <button class="play-control" type="button" data-play aria-label="Pause learning illustration"><span class="play-symbol" aria-hidden="true">Ⅱ</span><span data-play-label>Pause</span></button>
-                <label class="memory-control"><input type="checkbox" id="memory-toggle" checked><span class="switch" aria-hidden="true"></span>Memory replay</label>
+                <label class="knowledge-control"><input type="checkbox" id="knowledge-toggle" checked><span class="switch" aria-hidden="true"></span>Preserve knowledge</label>
               </div>
-              <div class="time-control"><label for="learning-time">Experience</label><input id="learning-time" type="range" min="0" max="100" value="25" aria-describedby="study-description"><span aria-hidden="true">t →</span></div>
+              <div class="time-control"><label for="learning-time">Learning progress</label><input id="learning-time" type="range" min="0" max="100" value="25" aria-describedby="study-description"><span aria-hidden="true">t →</span></div>
             </div>
-            <figcaption id="study-description"><span class="study-status">New experience. Earlier knowledge, retained.</span><span class="study-disclaimer">Conceptual illustration · not experimental results.</span></figcaption>
+            <figcaption id="study-description"><span class="study-status" aria-live="polite">Learn something new. Keep what matters.</span><span class="study-disclaimer">Conceptual illustration · not experimental results.</span></figcaption>
           </figure>
         </div>
         <div class="cover-footer"><ul class="profile-links" aria-label="Professional profiles"><li><a href="https://scholar.google.com/citations?user=AAz2lDQAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Scholar <span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/SRasoulHosseini" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></li><li><a href="https://www.linkedin.com/in/seyed-rasoul-hosseini-a7b85b1bb" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></li><li><a href="https://orcid.org/0000-0003-3760-9939" target="_blank" rel="noopener noreferrer">ORCID <span aria-hidden="true">↗</span></a></li></ul><a class="turn-page" href="#about">Continue reading <span aria-hidden="true">↓</span></a></div>
@@ -590,14 +589,14 @@ main { min-width: 0; }
       </section>
 
       <section class="chapter" id="publications" aria-labelledby="publications-title" tabindex="-1">
-        <div class="chapter-meta"><span class="eyebrow">Research record</span><span class="micro chapter-note">Papers &amp; preprints</span></div>
-        <div class="section-heading reveal"><div><h2 id="publications-title" class="chapter-title">Publications<span class="title-period">.</span></h2><p>A concise list of peer-reviewed work and current preprints.</p></div><a class="underlined-link" href="https://scholar.google.com/citations?user=AAz2lDQAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Scholar <span aria-hidden="true">↗</span></a></div>
+        <div class="chapter-meta"><span class="eyebrow">Research record</span><span class="micro chapter-note">Research papers</span></div>
+        <div class="section-heading reveal"><div><h2 id="publications-title" class="chapter-title">Publications<span class="title-period">.</span></h2></div><a class="underlined-link" href="https://scholar.google.com/citations?user=AAz2lDQAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Scholar <span aria-hidden="true">↗</span></a></div>
         <ol class="publication-list" role="list">
-          <li class="publication reveal"><div class="publication-meta"><span>2025</span><span>Preprint</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2507.12493" target="_blank" rel="noopener noreferrer">WaFusion: A Wavelet-Enhanced Diffusion Framework for Face Morph Generation</a></h3><p><strong>Seyed Rasoul Hosseini</strong>, Omid Ahmadieh, Jeremy Dawson, Nasser Nasrabadi</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
-          <li class="publication reveal"><div class="publication-meta"><span>2025</span><span class="accepted">Accepted</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2405.16266" target="_blank" rel="noopener noreferrer">Deep Reinforcement Learning with Enhanced PPO for Safe Mobile Robot Navigation</a></h3><p>Hamid Taheri, <strong>Seyed Rasoul Hosseini</strong>, Mohammad Ali Nekoui</p><p class="venue">International Journal of Intelligent Machines and Robotics, forthcoming</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
-          <li class="publication reveal"><div class="publication-meta"><span>2024</span><span class="reviewed">Peer reviewed</span></div><div class="publication-content"><h3><a href="https://doi.org/10.1109/IJCB62174.2024.10744533" target="_blank" rel="noopener noreferrer">Boosting Unconstrained Face Recognition with Targeted Style Adversary</a></h3><p>Mohammad Saeed Ebrahimi Saadabadi, Sahar Rahimi Malakshan, <strong>Seyed Rasoul Hosseini</strong>, Nasser M. Nasrabadi</p><p class="venue">IEEE IJCB · <a href="https://arxiv.org/abs/2408.07642" target="_blank" rel="noopener noreferrer">arXiv <span aria-hidden="true">↗</span></a></p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
-          <li class="publication reveal"><div class="publication-meta"><span>2024</span><span>Preprint</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2404.02348" target="_blank" rel="noopener noreferrer">COVID-19 Detection Based on Blood Test Parameters Using Various Artificial Intelligence Methods</a></h3><p>Kavian Khanjani, <strong>Seyed Rasoul Hosseini</strong>, Hamid Taheri, Shahrzad Shashaani, Mohammad Teshnehlab</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
-          <li class="publication reveal"><div class="publication-meta"><span>2024</span><span>Preprint</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2403.19782" target="_blank" rel="noopener noreferrer">ENet-21: An Optimized Light CNN Structure for Lane Detection</a></h3><p><strong>Seyed Rasoul Hosseini</strong>, Hamid Taheri, Mohammad Teshnehlab</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
+          <li class="publication reveal"><div class="publication-meta"><span>2025</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2507.12493" target="_blank" rel="noopener noreferrer">WaFusion: A Wavelet-Enhanced Diffusion Framework for Face Morph Generation</a></h3><p><strong>Seyed Rasoul Hosseini</strong>, Omid Ahmadieh, Jeremy Dawson, Nasser Nasrabadi</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
+          <li class="publication reveal"><div class="publication-meta"><span>2025</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2405.16266" target="_blank" rel="noopener noreferrer">Deep Reinforcement Learning with Enhanced PPO for Safe Mobile Robot Navigation</a></h3><p>Hamid Taheri, <strong>Seyed Rasoul Hosseini</strong>, Mohammad Ali Nekoui</p><p class="venue">International Journal of Intelligent Machines and Robotics</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
+          <li class="publication reveal"><div class="publication-meta"><span>2024</span></div><div class="publication-content"><h3><a href="https://doi.org/10.1109/IJCB62174.2024.10744533" target="_blank" rel="noopener noreferrer">Boosting Unconstrained Face Recognition with Targeted Style Adversary</a></h3><p>Mohammad Saeed Ebrahimi Saadabadi, Sahar Rahimi Malakshan, <strong>Seyed Rasoul Hosseini</strong>, Nasser M. Nasrabadi</p><p class="venue">IEEE IJCB · <a href="https://arxiv.org/abs/2408.07642" target="_blank" rel="noopener noreferrer">arXiv <span aria-hidden="true">↗</span></a></p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
+          <li class="publication reveal"><div class="publication-meta"><span>2024</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2404.02348" target="_blank" rel="noopener noreferrer">COVID-19 Detection Based on Blood Test Parameters Using Various Artificial Intelligence Methods</a></h3><p>Kavian Khanjani, <strong>Seyed Rasoul Hosseini</strong>, Hamid Taheri, Shahrzad Shashaani, Mohammad Teshnehlab</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
+          <li class="publication reveal"><div class="publication-meta"><span>2024</span></div><div class="publication-content"><h3><a href="https://arxiv.org/abs/2403.19782" target="_blank" rel="noopener noreferrer">ENet-21: An Optimized Light CNN Structure for Lane Detection</a></h3><p><strong>Seyed Rasoul Hosseini</strong>, Hamid Taheri, Mohammad Teshnehlab</p></div><span class="publication-arrow" aria-hidden="true">↗</span></li>
         </ol>
       </section>
 
@@ -666,9 +665,11 @@ main { min-width: 0; }
 
   function applyTheme(theme) {
     root.dataset.theme = theme;
-    themeButton?.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    const action = theme === 'dark' ? 'Switch to day mode' : 'Switch to night mode';
+    themeButton?.setAttribute('aria-label', action);
+    themeButton?.setAttribute('title', action);
     const label = document.querySelector('[data-theme-label]');
-    if (label) label.textContent = theme === 'dark' ? 'Night' : 'Paper';
+    if (label) label.textContent = theme === 'dark' ? 'Night' : 'Day';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#191b22' : '#f7f7f2');
   }
 
@@ -834,9 +835,9 @@ main { min-width: 0; }
     const oldGroup = document.getElementById('past-points');
     const newGroup = document.getElementById('new-points');
     const timeInput = document.getElementById('learning-time');
-    const memoryInput = document.getElementById('memory-toggle');
+    const preservationInput = document.getElementById('knowledge-toggle');
     const playButton = document.querySelector('[data-play]');
-    if (!study || !oldGroup || !newGroup || !timeInput || !memoryInput || !playButton) return;
+    if (!study || !oldGroup || !newGroup || !timeInput || !preservationInput || !playButton) return;
 
     let seed = 73019;
     function random() {
@@ -862,7 +863,7 @@ main { min-width: 0; }
     const newer = makeCloud(newGroup, 38);
     const oldRegion = study.querySelector('.past-region');
     const newRegion = study.querySelector('.new-region');
-    const oldTrace = study.querySelector('.memory-trace');
+    const oldTrace = study.querySelector('.knowledge-trace');
     const status = study.querySelector('.study-status');
     const playLabel = study.querySelector('[data-play-label]');
     const playSymbol = study.querySelector('.play-symbol');
@@ -874,21 +875,20 @@ main { min-width: 0; }
     let lastPaint = 0;
 
     function updatePlayButton() {
-      const word = running ? 'Pause' : time >= 1 ? 'Replay' : 'Play';
+      const word = running ? 'Pause' : time >= 1 ? 'Restart' : 'Play';
       playLabel.textContent = word;
       playSymbol.textContent = running ? 'Ⅱ' : time >= 1 ? '↻' : '▷';
       playButton.setAttribute('aria-label', `${word} learning illustration`);
     }
 
     function updateCaption() {
-      status.textContent = memoryInput.checked
-        ? 'New experience. Earlier knowledge, retained.'
-        : 'Without replay, earlier knowledge can fade.';
+      status.textContent = preservationInput.checked
+        ? 'Learn something new. Keep what matters.'
+        : 'Earlier knowledge can fade as new information arrives.';
     }
 
     function draw() {
-      const memory = memoryInput.checked;
-      const drift = memory ? 0 : time;
+      const drift = preservationInput.checked ? 0 : time;
       const phase = time * Math.PI * 2;
       older.forEach(point => {
         const x = 155 + point.x * (65 + drift * 17) + point.y * 14 + drift * 24;
@@ -950,8 +950,8 @@ main { min-width: 0; }
       updatePlayButton();
     });
     timeInput.addEventListener('pointerdown', pause);
-    memoryInput.addEventListener('change', () => { draw(); updateCaption(); });
-    memoryInput.setAttribute('aria-describedby', 'study-description');
+    preservationInput.addEventListener('change', () => { draw(); updateCaption(); });
+    preservationInput.setAttribute('aria-describedby', 'study-description');
     document.addEventListener('visibilitychange', () => { lastTick = 0; schedule(); });
     reducedMotion.addEventListener?.('change', event => { if (event.matches) pause(); });
 
