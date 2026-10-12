@@ -97,3 +97,36 @@ const e=boot({observer:true,observerFails:true});e.step();assert(e.reveal.classL
 e.selectors['[data-theme-toggle]'].fire('click');assert.equal(e.root.dataset.theme,'dark');
 console.log('PASS: measured mobile offsets, header resizing, final-section selection, finite reveal cancellation, failed observer fallback, and page visibility without animations.');
 
+// A tall viewport can reach the document bottom before Reviewing reaches the
+// sticky header. Every chapter must still activate in order during slow scroll.
+for (const height of [900, 1700, 2000]) {
+  const page=boot({reduced:true,compact:height===900});
+  const starts=[88,780,1680,2380,3030,3630,4280];
+  page.window.innerHeight=height;
+  page.root.scrollHeight=5000;
+  const end=5000-height;
+  const expected=page.chapters.map(chapter=>chapter.id);
+  function position(y) {
+    page.window.scrollY=y;
+    page.chapters.forEach((chapter,i)=>{
+      const bottom=starts[i+1]||4900;
+      chapter.rect={top:starts[i]-y,bottom:bottom-y,height:bottom-starts[i],left:0};
+    });
+    page.window.fire('scroll');page.step();
+    return page.links.find(link=>link.attrs['aria-current']==='location').hash.slice(1);
+  }
+  const down=[];
+  for(let y=0;y<=end;y=Math.min(end,y+8)) {
+    const active=position(y);if(down.at(-1)!==active)down.push(active);
+    if(y===end)break;
+  }
+  assert.deepEqual(down,expected,`No skipped chapter at viewport height ${height}`);
+  const up=[];
+  for(let y=end;y>=0;y=Math.max(0,y-8)) {
+    const active=position(y);if(up.at(-1)!==active)up.push(active);
+    if(y===0)break;
+  }
+  assert.deepEqual(up,[...expected].reverse(),`Reverse order at viewport height ${height}`);
+}
+console.log('PASS: every section activates in both scroll directions at mobile, desktop, and tall/zoomed-out viewport heights.');
+

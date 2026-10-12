@@ -70,7 +70,8 @@ Expected public paths include `/index.html`, `/assets/portrait.jpg`, and
 
 Scrolling is native, with smooth anchor links and no wheel interception or
 forced snapping. Header and navigation heights are measured for anchor offsets.
-The final section remains selected when the page reaches the bottom.
+Short final sections share the remaining scroll distance on tall or zoomed-out
+screens, so the active navigation does not skip Reviewing before Contact.
 
 Entries fade in once with finite animations. Their default CSS state is always
 visible: blocked scripts or failed observers cannot leave blank content.
@@ -95,9 +96,13 @@ Local file links, retained content and certificate bytes, JavaScript syntax,
 HTTP asset delivery, and focused interaction logic were checked. Regression
 checks cover resized headers, the mobile offset, bottom-of-page navigation,
 observer failure, theme changes, knowledge preservation, pause/resume, and reduced motion.
+The end-of-page regression checks every section in both scroll directions at
+900, 1700, and 2000-pixel viewport heights, including the previously skipped
+Certificates → Reviewing → Contact transition.
 
 The build environment blocks the live site and has no browser available.
-Browser rendering and the cause of the reported live failure remain unverified.
+Browser rendering remains unverified. The skipped navigation section was
+reproduced and corrected with viewport-based interaction tests.
 After deployment, check the page at desktop and phone widths, click each
 contents link, and open the CV and all three certificates. The page should
 also remain fully readable with JavaScript disabled.

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Seyed Rasoul Hosseini — PhD student at West Virginia University and visiting student at the University of Utah SCI Institute. Research in continual learning, self-supervised learning, and computer vision.">
   <meta name="theme-color" content="#f7f7f2">
-  <meta name="site-version" content="2026-10-12.3">
+  <meta name="site-version" content="2026-10-12.4">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Seyed Rasoul Hosseini — Research Notebook">
   <meta property="og:description" content="Learning from a world that does not stand still. Research in continual learning, self-supervised learning, and computer vision.">
@@ -727,14 +727,32 @@ main { min-width: 0; }
   function syncReadingPosition() {
     scrollQueued = false;
     const probe = stickyHeight + 48;
-    let active = chapters[0];
-    chapters.forEach(chapter => {
-      if (chapter.getBoundingClientRect().top <= probe) active = chapter;
-    });
     const available = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    const progress = Math.max(0, Math.min(1, window.scrollY / available));
+    const position = Math.max(0, Math.min(available, window.scrollY));
+    const progress = position / available;
     root.style.setProperty('--reading-progress', String(progress));
-    if (window.scrollY > 0 && available - window.scrollY <= 3) active = chapters[chapters.length - 1];
+
+    // Short final chapters may never reach the header on tall/zoomed-out
+    // screens. Fit their activation points into the remaining scroll distance
+    // instead of jumping directly to Contact at the document bottom.
+    const points = chapters.map(chapter => Math.max(0, chapter.getBoundingClientRect().top + window.scrollY - probe));
+    const unreachable = points.findIndex(point => point > available);
+    if (unreachable !== -1) {
+      let start = Math.max(0, unreachable - 1);
+      const minimumStep = Math.min(160, Math.max(72, (window.innerHeight - stickyHeight) * .12));
+      while (start > 0 && available - points[start] < (points.length - 1 - start) * minimumStep) start--;
+      const first = points[start];
+      const span = points[points.length - 1] - first;
+      if (span > 0) {
+        for (let i = start + 1; i < points.length; i++) {
+          points[i] = first + (points[i] - first) / span * (available - first);
+        }
+      }
+    }
+    let active = chapters[0];
+    points.forEach((point, index) => {
+      if (point <= position + 2) active = chapters[index];
+    });
 
     if (!active || active.id === activeId) return;
     activeId = active.id;
