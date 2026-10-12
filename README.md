@@ -2,7 +2,9 @@
 
 A personal academic website built around continual learning: paper-like surfaces,
 violet and teal ink, a contents margin, and an interactive learning illustration.
-Plain HTML, CSS, and JavaScript; no build step or package installation required.
+Plain HTML, CSS, and JavaScript. The delivered `index.html` is ready to upload:
+it contains its own CSS and JavaScript, so stale separate files cannot change
+its layout or behavior. The portrait and PDFs remain in `assets/`.
 
 ## Preview
 
@@ -19,19 +21,21 @@ system font fallbacks keep the page readable offline.
 
 1. Unzip this package.
 2. Open the existing `SRasoulHosseini.github.io` repository on GitHub.
-3. Upload the **contents inside** the extracted folder to the repository root:
+3. Replace `index.html` at the repository root with the file in this package.
+   Upload the **contents inside** the extracted folder to that same root:
    `index.html`, `styles.css`, `script.js`, `README.md`, and the entire `assets`
    folder. Do not upload the ZIP or nest the enclosing folder inside the repo.
 4. Commit the changes to the branch already used by GitHub Pages.
-5. Wait for the Pages deployment to finish, then reload the website. If the
-   previous design remains cached, perform a hard refresh.
+5. Wait for the Pages deployment to finish, then reload the website with
+   `Ctrl+Shift+R` (Windows/Linux) or `Command+Shift+R` (Mac).
 
 The repository name, URL, and existing Pages settings can stay the same.
 
 ## Editing
 
 - `index.html`: biography, publications, academic path, certificates, reviewing,
-  contact links, and metadata. Update the appropriate section directly.
+  contact links, and metadata. Update the appropriate HTML section directly.
+  The embedded style/script blocks are generated from the following two files.
 - `styles.css`: color variables at the top, typography, responsive layouts,
   reduced-motion behavior, and print styles.
 - `script.js`: Paper/Night theme, active contents link, reading progress, reveal
@@ -42,12 +46,37 @@ The repository name, URL, and existing Pages settings can stay the same.
   into one page each, including their original continuation with certification
   ID. The Coursera PDF is unchanged. Verification URLs appear beside each course.
 
+After editing `styles.css` or `script.js`, refresh their embedded copies:
+
+```bash
+python3 tools/build.py
+python3 tools/validate.py
+```
+
+These commands need Python 3 only. Changes to page text do not need a rebuild;
+run the validator after changing links or filenames. Upload the rebuilt
+`index.html` and any changed assets. Keep the source files and `tools/` in the
+repository for future maintenance.
+
+For changes to interaction behavior, run `node tools/check-interactions.cjs`
+with Node.js. These regression checks use a simulated DOM; they do not replace
+a visual check in a browser.
+
+Expected public paths include `/index.html`, `/assets/portrait.jpg`, and
+`/assets/certificates/NVIDIA_LLM_cropped.pdf`. A folder such as
+`/SRasoulHosseini.github.io-main/index.html` is the wrong upload location.
+
 ## Interaction and accessibility
 
-Scrolling is native, with no wheel interception or forced snapping. Sections
-fade in once; the contents margin becomes a horizontally scrollable navigation
-bar on smaller screens. Links, content, CV, and certificates work without
-JavaScript. Theme and illustration controls appear only after initialization.
+Scrolling is native, with smooth anchor links and no wheel interception or
+forced snapping. Header and navigation heights are measured for anchor offsets.
+The final section remains selected when the page reaches the bottom.
+
+Entries fade in once with finite animations. Their default CSS state is always
+visible: blocked scripts or failed observers cannot leave blank content.
+The contents margin becomes a horizontally scrollable navigation bar on smaller
+screens. Links, content, CV, and certificates work without JavaScript. Theme and
+illustration controls appear only after initialization.
 
 The opening illustration is a **conceptual visual metaphor**, not an experiment
 or trained model. It shows earlier and incoming experience. Use the slider,
@@ -60,9 +89,15 @@ video, WebGL, or a third-party animation library.
 
 ## Validation
 
-Local file links, retained publication content, JavaScript syntax, and focused
-interaction logic were checked. The cropped certificates were rendered and
-visually inspected. Browser rendering could not be checked in the build
-environment; review the page at desktop and mobile widths before publishing.
+Local file links, retained content and certificate bytes, JavaScript syntax,
+HTTP asset delivery, and focused interaction logic were checked. Regression
+checks cover resized headers, the mobile offset, bottom-of-page navigation,
+observer failure, theme changes, memory replay, pause/resume, and reduced motion.
+
+The build environment blocks the live site and has no browser available.
+Browser rendering and the cause of the reported live failure remain unverified.
+After deployment, check the page at desktop and phone widths, click each
+contents link, and open the CV and all three certificates. The page should
+also remain fully readable with JavaScript disabled.
 
 

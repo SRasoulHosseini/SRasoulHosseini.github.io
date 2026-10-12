@@ -4,6 +4,7 @@
 
   const root = document.documentElement;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const compactLayout = window.matchMedia('(max-width: 1000px)');
   const themeButton = document.querySelector('[data-theme-toggle]');
 
   function applyTheme(theme) {
@@ -37,13 +38,37 @@
   // Ordinary anchor navigation: no wheel handlers or scroll interception.
   const chapters = [...document.querySelectorAll('main > section[id]')];
   const navigation = document.querySelector('.contents');
+  const masthead = document.querySelector('.masthead');
+  const mobileBar = document.querySelector('.margin-column');
   const links = [...document.querySelectorAll('.contents a')];
   let scrollQueued = false;
   let activeId = '';
+  let stickyHeight = 88;
+
+  function measureHeader() {
+    const headerHeight = masthead?.getBoundingClientRect().height || 0;
+    const barHeight = compactLayout.matches ? mobileBar?.getBoundingClientRect().height || 0 : 0;
+    stickyHeight = Math.ceil(headerHeight + barHeight);
+    root.style.setProperty('--masthead-height', `${Math.ceil(headerHeight)}px`);
+    root.style.setProperty('--sticky-height', `${stickyHeight}px`);
+    queueReadingPosition();
+  }
+
+  function keepActiveTabVisible() {
+    if (!navigation || !compactLayout.matches) return;
+    const link = links.find(item => item.hash === `#${activeId}`);
+    if (!link) return;
+    const tab = link.getBoundingClientRect();
+    const bar = navigation.getBoundingClientRect();
+    if (tab.left < bar.left || tab.right > bar.right) {
+      const left = navigation.scrollLeft + tab.left - bar.left - (navigation.clientWidth - tab.width) / 2;
+      navigation.scrollTo({ left: Math.max(0, left), behavior: 'auto' });
+    }
+  }
 
   function syncReadingPosition() {
     scrollQueued = false;
-    const probe = Math.min(window.innerHeight * .32, 300);
+    const probe = stickyHeight + 48;
     let active = chapters[0];
     chapters.forEach(chapter => {
       if (chapter.getBoundingClientRect().top <= probe) active = chapter;
@@ -51,6 +76,7 @@
     const available = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const progress = Math.max(0, Math.min(1, window.scrollY / available));
     root.style.setProperty('--reading-progress', String(progress));
+    if (window.scrollY > 0 && available - window.scrollY <= 3) active = chapters[chapters.length - 1];
 
     if (!active || active.id === activeId) return;
     activeId = active.id;
@@ -59,15 +85,8 @@
       link.classList.toggle('active', isActive);
       if (isActive) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
-      if (isActive && navigation && window.innerWidth <= 1000) {
-        // Keep the selected tab visible without moving the page vertically.
-        const x = link.getBoundingClientRect().left - navigation.getBoundingClientRect().left + navigation.scrollLeft;
-        const right = x + link.offsetWidth;
-        if (x < navigation.scrollLeft || right > navigation.scrollLeft + navigation.clientWidth) {
-          navigation.scrollTo({ left: Math.max(0, x - 18), behavior: reducedMotion.matches ? 'auto' : 'smooth' });
-        }
-      }
     });
+    keepActiveTabVisible();
   }
 
   function queueReadingPosition() {
@@ -77,36 +96,65 @@
   }
 
   window.addEventListener('scroll', queueReadingPosition, { passive: true });
-  window.addEventListener('resize', queueReadingPosition, { passive: true });
-  window.addEventListener('pageshow', queueReadingPosition);
-  window.addEventListener('load', queueReadingPosition);
-  document.fonts?.ready.then(queueReadingPosition);
-  queueReadingPosition();
+  window.addEventListener('resize', () => { measureHeader(); keepActiveTabVisible(); }, { passive: true });
+  window.addEventListener('pageshow', measureHeader);
+  window.addEventListener('load', measureHeader);
+  document.fonts?.ready.then(measureHeader);
+  if ('ResizeObserver' in window) {
+    const headerObserver = new ResizeObserver(measureHeader);
+    if (masthead) headerObserver.observe(masthead);
+    if (mobileBar) headerObserver.observe(mobileBar);
+  }
+  measureHeader();
 
-  // Reveal once, and only after the observer exists. The baseline is readable.
+  // Content is ALWAYS visible in CSS. A short, finite animation is added only
+  // when a supported observer reports an entry. Failure cannot leave blanks.
   const revealItems = [...document.querySelectorAll('.reveal')];
+  const animations = new Map();
   let revealObserver;
 
   function showAll() {
     revealObserver?.disconnect();
-    root.classList.remove('motion-ready');
+    animations.forEach(animation => animation.cancel());
+    animations.clear();
     revealItems.forEach(element => element.classList.add('visible'));
   }
 
   if ('IntersectionObserver' in window && !reducedMotion.matches) {
-    revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+    try {
+      revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const element = entry.target;
+          observer.unobserve(element);
+          element.classList.add('visible');
+          if (reducedMotion.matches || !element.animate || element.contains(document.activeElement)) return;
+          try {
+            const animation = element.animate([
+              { opacity: .35, transform: 'translateY(8px)' },
+              { opacity: 1, transform: 'translateY(0)' }
+            ], { duration: 420, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'none' });
+            animations.set(element, animation);
+            animation.onfinish = () => animations.delete(element);
+          } catch { /* Animation is optional; the content is still visible. */ }
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -16px 0px' });
+      revealItems.forEach(element => {
+        // The initial viewport should be readable immediately, including deep links.
+        if (element.getBoundingClientRect().top < window.innerHeight) element.classList.add('visible');
+        else revealObserver.observe(element);
       });
-    }, { threshold: 0, rootMargin: '0px 0px -24px 0px' });
-    root.classList.add('motion-ready');
-    revealItems.forEach(element => revealObserver.observe(element));
+    } catch { showAll(); }
   } else showAll();
 
   document.addEventListener('focusin', event => {
-    event.target.closest?.('.reveal')?.classList.add('visible');
+    const element = event.target.closest?.('.reveal');
+    if (element) {
+      animations.get(element)?.cancel();
+      animations.delete(element);
+      revealObserver?.unobserve(element);
+      element.classList.add('visible');
+    }
   });
 
   function revealHashTarget() {
@@ -114,15 +162,14 @@
       const id = decodeURIComponent(window.location.hash.slice(1));
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
-      target.closest('.reveal')?.classList.add('visible');
-      // Preserve the staggered reading experience farther down a long chapter.
-      target.querySelector('.reveal')?.classList.add('visible');
+      target.focus?.({ preventScroll: true });
       queueReadingPosition();
     } catch { /* Ignore invalid URL fragments. */ }
   }
   window.addEventListener('hashchange', revealHashTarget);
   revealHashTarget();
   reducedMotion.addEventListener?.('change', event => { if (event.matches) showAll(); });
+  window.addEventListener('beforeprint', showAll);
 
   // A deliberately conceptual illustration, not training or benchmark data.
   function initializeLearningStudy() {
@@ -167,6 +214,7 @@
     let visible = study.getBoundingClientRect().top < window.innerHeight && study.getBoundingClientRect().bottom > 0;
     let frameId = 0;
     let lastTick = 0;
+    let lastPaint = 0;
 
     function updatePlayButton() {
       const word = running ? 'Pause' : time >= 1 ? 'Replay' : 'Play';
@@ -213,7 +261,7 @@
       if (!running || !visible || document.hidden) { lastTick = 0; return; }
       if (lastTick) time = Math.min(1, time + Math.min(now - lastTick, 80) / 18000);
       lastTick = now;
-      draw();
+      if (now - lastPaint >= 32 || time >= 1) { draw(); lastPaint = now; }
       if (time >= 1) { running = false; updatePlayButton(); }
       schedule();
     }
@@ -240,10 +288,11 @@
     });
     timeInput.addEventListener('input', () => {
       pause();
-      time = Number(timeInput.value) / 100;
+      time = Math.max(0, Math.min(1, (Number(timeInput.value) || 0) / 100));
       draw();
       updatePlayButton();
     });
+    timeInput.addEventListener('pointerdown', pause);
     memoryInput.addEventListener('change', () => { draw(); updateCaption(); });
     memoryInput.setAttribute('aria-describedby', 'study-description');
     document.addEventListener('visibilitychange', () => { lastTick = 0; schedule(); });
@@ -265,5 +314,9 @@
     schedule();
   }
 
-  initializeLearningStudy();
+  try { initializeLearningStudy(); } catch {
+    // A visualization failure must never disable navigation or hide the page.
+    const controls = document.querySelector('.study-controls');
+    if (controls) controls.hidden = true;
+  }
 })();
